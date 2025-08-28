@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BMC Quote Request Email Builder</title>
+  <style>
+   body {
+  font-family: sans-serif;
+  background: #f7fafb;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  max-width: 550px;
+  margin: 2em auto;
+  background: #464646;
+  padding: 2em 2em 1em;
+  border-radius: 1.5em;
+  box-shadow: 0 2px 16px #0001;
+}
+    h1 { text-align: center; color: #9cc639; }
+    label { display: block; margin: 1.5em 0 0.2em; font-weight: bold; }
+    input, textarea, button { font-size: 1em; padding: 0.5em; border-radius: 8px; border: 1px solid #bbb; width: 100%; box-sizing: border-box; }
+    textarea { resize: vertical; min-height: 2.5em; }
+    button { background: #9cc639; color: #fff; border: none; margin: 1.5em 0 0.5em; cursor: pointer; font-size: 1.2em; font-weight: bold;}
+    button:hover { background: #dee20b; }
+    .tip { color: #b6b5b5; font-size: 0.97em; margin-top: 0.5em; margin-bottom: 0.25em;}
+    /* This is the card */
+.card label {
+  color: #d2d1d1;
+}
+    .instructions {text-align: center; font-size: 0.97em; color: #999; margin-bottom: 1.2em;}
+.instructions-required {
+  color: #ec5555;       /* Nice red (material red) */
+  font-weight: bold;
+  display: block;       /* Makes the span act like a new line (could use <div> too) */
+  margin-top: 1.1em;    /* Adds more vertical space above */
+  font-size: 1.03em;
+  letter-spacing: 0.01em;}
+    .logo { display: block; margin: 0 auto 1em; max-width: 350px;}
+    .footer {text-align: center; font-size: 0.93em; color: #999; margin-top: 2.5em;}
+</style>
+</head>
+<body>
+<div class="card">
+  <img class="logo" src="https://benchmark.sfo2.cdn.digitaloceanspaces.com/website/logo-benchmark-white.png" alt="BMC Logo" />
+  <h1>Quote Request Email Builder</h1>
+  <div class="instructions">
+  Fill out all required fields. <br>
+  If unsure, leave detailed notes in Special Information.<br>
+   <span class="instructions-required">
+    All fields required except Previous Job and Website Links.
+  </span>
+
+</div>
+
+  <form id="quoteForm" autocomplete="off">
+    <label>Job Number:</label>
+    <input type="text" id="jobNumber" required placeholder="e.g. 250401">
+
+    <label>Client Name:</label>
+    <input type="text" id="clientName" required placeholder="e.g. BMW">
+
+    <label>Project Name:</label>
+    <input type="text" id="projectName" required placeholder="e.g. Motorrad Days 2025">
+
+    <label>Due Date:</label>
+    <input type="date" id="dueDate" required>
+    <div class="tip">Date estimate is needed by (mm/dd/yyyy)</div>
+
+    <label>Commission:</label>
+    <input type="text" id="commission" required placeholder="0 or % (e.g. 15)">
+    <div class="tip">Enter 0 or percent (e.g., 0 or 12)</div>
+
+    <label>File Location:</label>
+    <input type="text" id="fileLocation" required placeholder="Paste server folder or describe">
+
+    <label>Special Information:</label>
+    <textarea id="specialInfo" required placeholder="E.g., aluminum panels, use vendor X, special hardware"></textarea>
+
+    <label>Previous Job Reference: <span class="small">(optional)</span></label>
+    <input type="text" id="prevJobRef" placeholder="If similar, provide client, project, job #">
+
+    <label>Web Site Links: <span class="small">(optional)</span></label>
+    <textarea id="webLinks" placeholder="Paste URLs, if any"></textarea>
+
+    <button type="submit">Generate Email</button>
+<div class="tip">
+  Important: Your request is <strong>not complete</strong> until you send the email from your email program.
+</div>
+
+  </form>
+
+  <div class="footer">©2025 Benchmark Craftsmen</div>
+</div>
+  <script>
+    document.getElementById('quoteForm').onsubmit = function(e) {
+      e.preventDefault();
+
+      // Collect all values
+      const jobNumber = document.getElementById('jobNumber').value.trim();
+      const clientName = document.getElementById('clientName').value.trim();
+      const projectName = document.getElementById('projectName').value.trim();
+      const dueDate = document.getElementById('dueDate').value.trim();
+      const commission = document.getElementById('commission').value.trim();
+      const fileLocation = document.getElementById('fileLocation').value.trim();
+      const specialInfo = document.getElementById('specialInfo').value.trim();
+      const prevJobRef = document.getElementById('prevJobRef').value.trim();
+      const webLinks = document.getElementById('webLinks').value.trim();
+
+      // Validation
+      if(!jobNumber || !clientName || !projectName || !dueDate || !commission || !fileLocation || !specialInfo) {
+        alert("Please fill out all required fields.");
+        return false;
+      }
+
+      // Format date as mm/dd/yyyy
+      const dateObj = new Date(dueDate);
+      const dueDateFmt = !isNaN(dateObj) ? `${dateObj.getMonth()+1}/${dateObj.getDate()}/${dateObj.getFullYear()}` : dueDate;
+
+      // Email subject line
+      const subject = `BMC quote request – ${jobNumber}, ${clientName}, ${projectName}`;
+
+      // Email body
+      let body = 
+`Due Date: ${dueDateFmt}
+Commission: ${commission}
+File Location: ${fileLocation}
+Special Information: ${specialInfo}`;
+      if(prevJobRef) body += `\nPrevious Job Reference: ${prevJobRef}`;
+      if(webLinks) body += `\nWeb Site Links: ${webLinks}`;
+      body += `\n\n[Please do not type below this line.]`;
+
+      // URL encode subject and body
+      const mailtoSubject = encodeURIComponent(subject);
+      const mailtoBody = encodeURIComponent(body);
+
+      // Who should the email go to?
+      const to = 'ralph.dixon@benchmark.us.com'; // e.g. "bob@company.com" or leave blank for now
+
+      // Collector email for BCC - not using at the moment
+      //const bcc = 'quoterequests.benchmark@gmail.com';
+
+      // Open the mail client
+      window.location.href = `mailto:${to}?bcc=${encodeURIComponent(bcc)}&subject=${mailtoSubject}&body=${mailtoBody}`;
+
+    }
+  </script>
+</div>
+</body>
+</html>
