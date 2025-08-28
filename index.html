@@ -136,12 +136,10 @@ Special Information: ${specialInfo}`;
       const mailtoSubject = encodeURIComponent(subject);
       const mailtoBody = encodeURIComponent(body);
 
-     // Instead of putting the full email directly:
-const user = "quoterequests.benchmark";
-const domain = "gmail.com";
-const to = user + "@" + domain;
-
-      // Open the mail client
+const x = "quoterequests.benchmark";
+const y = "gmail";
+const z = "com";
+const to = [x, y + "." + z].join("@");
 window.location.href = `mailto:${to}?subject=${mailtoSubject}&body=${mailtoBody}`;
 
     }
