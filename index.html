@@ -136,14 +136,13 @@ Special Information: ${specialInfo}`;
       const mailtoSubject = encodeURIComponent(subject);
       const mailtoBody = encodeURIComponent(body);
 
-      // Who should the email go to?
-      const to = 'ralph.dixon@benchmark.us.com'; // e.g. "bob@company.com" or leave blank for now
-
-      // Collector email for BCC - not using at the moment
-      //const bcc = 'quoterequests.benchmark@gmail.com';
+     // Instead of putting the full email directly:
+const user = "quoterequests.benchmark";
+const domain = "gmail.com";
+const to = user + "@" + domain;
 
       // Open the mail client
-      window.location.href = `mailto:${to}?bcc=${encodeURIComponent(bcc)}&subject=${mailtoSubject}&body=${mailtoBody}`;
+window.location.href = `mailto:${to}?subject=${mailtoSubject}&body=${mailtoBody}`;
 
     }
   </script>
