@@ -136,11 +136,19 @@ Special Information: ${specialInfo}`;
       const mailtoSubject = encodeURIComponent(subject);
       const mailtoBody = encodeURIComponent(body);
 
-const x = "quoterequests.benchmark";
+      const x = "quoterequests.benchmark";
 const y = "gmail";
 const z = "com";
 const to = [x, y + "." + z].join("@");
-window.location.href = `mailto:${to}?subject=${mailtoSubject}&body=${mailtoBody}`;
+
+// === HERE IS THE LENGTH CHECK ===
+const mailtoUrl = `mailto:${to}?subject=${mailtoSubject}&body=${mailtoBody}`;
+const maxUrlLength = 1900;
+if (mailtoUrl.length > maxUrlLength) {
+  alert("Your message is too long to create the email-please shorten the Special Information field and try again. You can always attach files to the email this populates if need be.");
+  return;
+}
+window.location.href = mailtoUrl;
 
     }
   </script>
